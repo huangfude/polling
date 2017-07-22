@@ -1,24 +1,58 @@
 //消息展示
-function showNotice(title, text, type = 'info', delay = 1000 * 10) {
+function showNotice(param) {
+
+    var options = {
+        title: "Message" + param,
+        text: "Please Wait",
+        type: 'info',
+        icon: 'fa fa-spinner fa-spin',
+        hide: false, //是否自动关闭
+        buttons: {
+            closer: false,
+            sticker: false
+        },
+        shadow: false
+    };
 
     requirejs(['jquery', 'pnotify', 'pnotify.buttons'], function($, PNotify) {
         PNotify.prototype.options.styling = "bootstrap3";
-        new PNotify({
-            title: title,
-            text: text,
-            type: type,
-            delay: delay,
-            hide: true, //是否自动关闭
-            mouse_reset: true, //鼠标悬浮的时候，时间重置
+        var notice = new PNotify(options);
 
-            buttons: {
-                closer: true,
-                closer_hover: false,
-                sticker_hover: true,
-                //labels: {close: "Close", stick: "Stick"}
+        $.ajax({
+            type: "POST",
+            url: "http://api.36wu.com/Weather/GetWeather",
+            data: {
+                district: "福州",
+                format: "json"
             },
-
+            dataType: 'JSONP',
+            //async: false,
+            success: function(data) {
+                options.hide = true;
+                options.buttons = {
+                    closer: true,
+                    sticker: true
+                };
+                options.shadow = true;
+                options.width = PNotify.prototype.options.width;
+                options.text = JSON.stringify(data);
+                options.type = "success";
+                options.icon = 'fa fa-check';
+                notice.update(options);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                options.hide = true;
+                options.buttons = {
+                    closer: true,
+                    sticker: true
+                };
+                options.text = "请求数据异常，状态码：" + XMLHttpRequest.status;
+                options.type = "error";
+                notice.update(options);
+            }
         });
+
     });
+
 
 }
