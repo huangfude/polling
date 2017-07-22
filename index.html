@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <TITLE>实时更新数据DEMO演示</TITLE>
+
+
+
+    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="plugins/pnotify/css/pnotify.css">
+    <link rel="stylesheet" href="plugins/pnotify/css/pnotify.brighttheme.css">
+    <link rel="stylesheet" href="plugins/pnotify/css/pnotify.buttons.css">
+
+
+    <script type="text/javascript" src="js/require.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="plugins/highcharts/highcharts.js"></script>
+
+    <script type="text/javascript" src="plugins/pnotify/js/pnotify.js"></script>
+    <script type="text/javascript" src="plugins/pnotify/js/pnotify.reference.js"></script>
+    <script type="text/javascript" src="plugins/pnotify/js/pnotify.buttons.js"></script>
+
+    <script type="text/javascript">
+        var timmer;
+        var counter = 1;
+
+        $(function() {
+
+            // 设置图标属性
+            Highcharts.setOptions({
+                global: {
+                    useUTC: false
+                }
+            });
+
+            // 图表
+            lineChart();
+
+            //绑定按钮事件
+            $("#startPoll").click(function() {
+                // 定时器
+                timmer = setInterval(function() {
+                    showNotice('你有一个新消息', '此消息来源：【' + '定时轮询' + counter + '】', 'warning');
+                    counter++;
+                }, 1000);
+            });
+
+            $("#stopPoll").click(function() {
+                clearInterval(timmer);
+                counter = 1;
+            });
+
+        });
+    </script>
+</HEAD>
+
+<BODY>
+
+    <div class="row">
+
+        <div class="col-sm-6">
+            <div id="container" style="width:700px;height:400px;"></div>
+
+            <div class="text-center">
+                <button id="startPoll" class="btn btn-success">开始定时轮询</button>
+                <button id="stopPoll" class="btn btn-warning">结束定时轮询</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 自定义 js -->
+    <script type="text/javascript" src="js/chart.js"></script>
+    <script type="text/javascript" src="js/notice.js"></script>
+
+</BODY>
+
+</HTML>
